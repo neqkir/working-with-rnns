@@ -31,6 +31,10 @@ model.compile(loss='mean_squared_error', optimizer='adam')
 for i in range(n_epoch):
 	model.fit(X, y, epochs=1, batch_size=n_batch, verbose=1, shuffle=False)
 	model.reset_states()
+
+#saving weights
+model.save_weights("sequence_pred.h5")
+
 # re-define the batch size
 n_batch = 1
 # re-define model
@@ -38,8 +42,7 @@ new_model = Sequential()
 new_model.add(LSTM(n_neurons, batch_input_shape=(n_batch, X.shape[1], X.shape[2]), stateful=True))
 new_model.add(Dense(1))
 # copy weights
-old_weights = model.get_weights()
-new_model.set_weights(old_weights)
+new_model.load_weights("sequence_pred.h5")
 # compile model
 new_model.compile(loss='mean_squared_error', optimizer='adam')
 # online forecast
